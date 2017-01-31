@@ -13,7 +13,7 @@
         case 'alterar' :{alterarCliente($db); break;}
         case 'cadastrar' :{cadastrarCliente($db); break;}
         case 'dadosCliente' :{dadosCliente($db); break;}
-        case 'procurar' :{acharCliente($db);break;}
+        case 'procurarCliente' :{acharCliente($db);break;}
         default : {listarCliente($db); break;}
     }
 
@@ -222,16 +222,17 @@
     function acharCliente($db){
         $telefoneCliente = trim($_GET['telefonecliente']);
         
-        if($telefoneCliente ==""){
+        if(!empty($telefoneCliente =="")){
             response (array (
                             "erro"=>true,
                             "msg" => "O nome deve ser preenchido!"
-                            ));            
+                            )); 
+            
         }
         $sql = sprintf('SELECT 
                             cliente_telefone,
                             cliente_nome,
-                            cliente_frete
+                            cliente_endereco
                         FROM
                             tb_cliente
                         WHERE

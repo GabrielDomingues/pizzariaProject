@@ -134,7 +134,7 @@
             <label for="cpachar-nomecliente">Nome</label>
           </div>
           <div class="input-field col s4">
-            <input id="cpachar-fretecliente" placeholder="" name="fretecliente" type="text" class="validate">
+            <input id="cpachar-fretecliente" placeholder="" name="enderecocliente" type="text" class="validate">
             <label for="cpachar-fretecliente">Frete</label>
           </div>
         

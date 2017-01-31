@@ -114,9 +114,9 @@ function cliente(){
         }).done(function(acharCliente){
             $.each(acharCliente, function(key, val){
                
-               $("#cpachar-telefonecliente").val(acharCliente[0].cliente_telefone);
-               $("#cpachar-nomecliente").val(acharCliente[0].cliente_nome);
-               $("#cpachar-fretecliente").text(val(acharCliente[0].cliente_frete));
+               $("#cpachar-telefonecliente").val(acharCliente.cliente_telefone);
+               $("#cpachar-nomecliente").val(acharCliente.cliente_nome);
+               $("#cpachar-fretecliente").val(acharCliente.cliente_endereco);
                 
 //                var tr = $("<tr />");
 //                tr.append($("<td />").text(val.cliente_id));
