@@ -125,9 +125,13 @@
       <div class="row">
     <form class="col s12" id="formFrete">
       <div class="row">
-          <div class="input-field col s6">
+          <div class="input-field col s4">
             <input  id="cpachar-telefonecliente" placeholder="" name="telefonecliente" type="text" class="validate" required>
-            <label for="cpachar-telefone">Telefone</label>
+            <label for="cpachar-telefonecliente">Telefone</label>
+          </div>
+          <div class="input-field col s4">
+            <input id="cpachar-nomecliente" placeholder="" name="nomecliente" type="text" class="validate">
+            <label for="cpachar-nomecliente">Nome</label>
           </div>
           <div class="input-field col s4">
             <input id="cpachar-fretecliente" placeholder="" name="fretecliente" type="text" class="validate">

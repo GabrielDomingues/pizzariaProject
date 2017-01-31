@@ -94,29 +94,45 @@ function cliente(){
         });
     }
     
-    this.procurarCliente =function(cliente_telefone,form){
-        
-        $("#cpachar-telefonecliente").val(cliente_telefone);
-        
-        $.ajax({
-            url : this.url + "?passo=acharCliente&telefonecliente=" + cliente_telefone
-        }).done(function(data){
-            $("#cpachar-fretecliente").val(data[0].cliente_frete);
-        });
-        
-    }
+//    this.procurarCliente =function(cliente_telefone,form){
+//        
+//        $("#cpachar-telefonecliente").val(cliente_telefone);
+//        
+//        $.ajax({
+//            url : this.url + "?passo=acharCliente&telefonecliente=" + cliente_telefone
+//        }).done(function(data){
+//            $("#cpachar-fretecliente").val(data[0].cliente_frete);
+//        });
+//        
+//    }
     
-    this.mostrarFrete = function(cliente_id,form){
-        $("#cpalterar-idcliente").val(cliente_id);
+    this.procurarCliente = function(cliente_telefone,form){
         
+        cliente_telefone = $("#cpachar-telefonecliente").val();
         $.ajax({
-            url : this.url + "?passo=dadosCliente&idcliente=" + cliente_id
-        }).done(function(data){
-            $("#cpalterar-nomecliente").val(data[0].cliente_nome);
-            $("#cpalterar-fretecliente").val(data[0].cliente_frete);
-            
-//            $("#modalAlterar").openModal();
+            url : this.url +"?passo=acharCliente&telefonecliente=" + cliente_telefone
+        }).done(function(acharCliente){
+            $.each(acharCliente, function(key, val){
+               
+               $("#cpachar-telefonecliente").val(acharCliente[0].cliente_telefone);
+               $("#cpachar-nomecliente").val(acharCliente[0].cliente_nome);
+               $("#cpachar-fretecliente").text(val(acharCliente[0].cliente_frete));
+                
+//                var tr = $("<tr />");
+//                tr.append($("<td />").text(val.cliente_id));
+//                tr.append($("<td />").text(val.cliente_nome));
+//                tr.append($("<td />").text(val.cliente_telefone));
+//                tr.append($("<td />").text(val.cliente_endereco));
+            });
         });
+//        $.ajax({
+//            url : this.url + "?passo=acharCliente&telefonecliente=" + cliente_telefone
+//        }).done(function(data){
+//            $("#cpachar-telefonecliente").val(data[0].cliente_telefone);
+//            $("cpachar-nomecliente").val(data[0].cliente_nome);
+//            $("#cpachar-fretecliente").val(data[0].cliente_frete);
+//
+//        });
     }
     
     this.executaAlteracao = function (form){

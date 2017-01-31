@@ -220,17 +220,24 @@
     }
     
     function acharCliente($db){
-        $telefoneCliente = trim($_POST['telefonecliente']);
+        $telefoneCliente = trim($_GET['telefonecliente']);
+        
+        if($telefoneCliente ==""){
+            response (array (
+                            "erro"=>true,
+                            "msg" => "O nome deve ser preenchido!"
+                            ));            
+        }
         $sql = sprintf('SELECT 
-                            cliente_id,
                             cliente_telefone,
+                            cliente_nome,
                             cliente_frete
                         FROM
                             tb_cliente
                         WHERE
                             cliente_telefone = :TELEFONECLIENTE');
         $consulta = $db->con->prepare($sql);
-        $consulta->bindParam(':TELEFONECLIENTE', $telefoneClienteCliente);
+        $consulta->bindParam(':TELEFONECLIENTE', $telefoneCliente);
         $consulta->execute();
         if($consulta->rowCount()==0){
             $retorno = array (
