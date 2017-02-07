@@ -70,7 +70,7 @@
             ));
         }
         
-        $string = str_replace (" ", "+", urlencode($enderecoCliente));
+        $string = str_replace (" ", "+", urlencode($enderecoCliente.",Campo Grande - MS"));
         $details_url = "http://maps.googleapis.com/maps/api/geocode/json?address=".$string."&sensor=false";
  
         $ch = curl_init();
@@ -89,6 +89,7 @@
         $longitudeCliente = $geometry['location']['lng'];
         
         $freteCliente = calculaFrete($latitudeCliente, $longitudeCliente);
+        $distanciaCliente = calculaDistancia($latitudeCliente, $longitudeCliente);
         
         $sql = sprintf('UPDATE 
                             tb_cliente
@@ -98,7 +99,8 @@
                             cliente_endereco= :ENDERECOCLIENTE,
                             cliente_frete= :FRETECLIENTE,
                             cliente_longitude= :LONGITUDECLIENTE,
-                            cliente_latitude= :LATITUDECLIENTE
+                            cliente_latitude= :LATITUDECLIENTE,
+                            cliente_distancia= :DISTANCIACLIENTE
                         WHERE
                             cliente_id = :IDCLIENTE');
         $consulta = $db->con->prepare($sql);
@@ -109,6 +111,7 @@
         $consulta->bindParam(':FRETECLIENTE', $freteCliente);
         $consulta->bindParam(':LONGITUDECLIENTE',$longitudeCliente);
         $consulta->bindParam(':LATITUDECLIENTE', $latitudeCliente);
+        $consulta->bindParam(':DISTANCIACLIENTE', $distanciaCliente);        
         $consulta->execute();
         
         if($consulta->rowCount()==0){
@@ -154,7 +157,7 @@
             ));
         }
         
-        $string = str_replace (" ", "+", urlencode($enderecoCliente));
+        $string = str_replace (" ", "+", urlencode($enderecoCliente.",Campo Grande - MS"));
         $details_url = "http://maps.googleapis.com/maps/api/geocode/json?address=".$string."&sensor=false";
  
         $ch = curl_init();
@@ -169,22 +172,24 @@
 
         $geometry = $response['results'][0]['geometry'];
  
-        $latiudeCliente = $geometry['location']['lat'];
+        $latitudeCliente = $geometry['location']['lat'];
         $longitudeCliente = $geometry['location']['lng'];
         
-        $freteCliente = calculaFrete($latiudeCliente, $longitudeCliente);
+        $freteCliente = calculaFrete($latitudeCliente, $longitudeCliente);
+        $distanciaCliente = calculaDistancia($latitudeCliente, $longitudeCliente);
         
         $sql = sprintf('INSERT INTO tb_cliente
-                            (cliente_nome, cliente_telefone,cliente_endereco,cliente_frete,cliente_longitude,cliente_latitude)
+                            (cliente_nome, cliente_telefone,cliente_endereco,cliente_frete,cliente_longitude,cliente_latitude, cliente_distancia)
                         VALUES 
-                            (:CLIENTENOME, :CLIENTETELEFONE, :CLIENTEENDERECO, :CLIENTEFRETE, :CLIENTELONGITUDE, :CLIENTELATITUDE)');
+                            (:CLIENTENOME, :CLIENTETELEFONE, :CLIENTEENDERECO, :CLIENTEFRETE, :CLIENTELONGITUDE, :CLIENTELATITUDE, :CLIENTEDISTANCIA)');
         $consulta = $db->con->prepare($sql);
         $consulta->bindParam(':CLIENTENOME', $nomeCliente);
         $consulta->bindParam(':CLIENTETELEFONE', $telefoneCliente);
         $consulta->bindParam(':CLIENTEENDERECO', $enderecoCliente);
         $consulta->bindParam(':CLIENTEFRETE', $freteCliente);
         $consulta->bindParam(':CLIENTELONGITUDE', $longitudeCliente);
-        $consulta->bindParam(':CLIENTELATITUDE', $latiudeCliente);
+        $consulta->bindParam(':CLIENTELATITUDE', $latitudeCliente);
+        $consulta->bindParam(':CLIENTEDISTANCIA', $distanciaCliente);
         $consulta->execute();
         
         if($consulta->rowCount()==0){
@@ -225,13 +230,16 @@
         if(!empty($telefoneCliente =="")){
             response (array (
                             "erro"=>true,
-                            "msg" => "O nome deve ser preenchido!"
-                            )); 
-            
+                            "msg" => "O telefone deve ser preenchido!"
+                            ));             
         }
         $sql = sprintf('SELECT 
                             cliente_telefone,
                             cliente_nome,
+                            cliente_distancia,
+                            cliente_frete,
+                            cliente_latitude,
+                            cliente_longitude,
                             cliente_endereco
                         FROM
                             tb_cliente
@@ -252,17 +260,20 @@
                             );
         }
         
-        response($retorno);
+        response($consulta->fetchAll(PDO::FETCH_ASSOC));
     }
 
     function listarCliente($db){
-        $sql = sprintf('SELECT 
+        $sql = sprintf('SELECT TOP 10
                             cliente_id,
                             cliente_nome,
                             cliente_telefone,
                             cliente_endereco
                         FROM
-                            tb_cliente');
+                            tb_cliente
+                        ORDER by
+                            cliente_id
+                        DESC');
         $consulta = $db->con->prepare($sql);
         $consulta->execute();
         
@@ -276,8 +287,8 @@
     }
     
     function calculaFrete($lat2,$long2){
-        $lat1 = -20.457997;
-        $long1 = -54.587305;
+        $lat1 = -20.452215;
+        $long1 = -54.593438;
         $d2r = 0.017453292519943295769236;
 
         $dlong = ($long2 - $long1) * $d2r;
@@ -290,8 +301,15 @@
         $a = ($temp_sin * $temp_sin) + ($temp_cos * $temp_cos) * ($temp_sin2 * $temp_sin2);
         $c = 2.0 * atan2(sqrt($a), sqrt(1.0 - $a));
 
-        $frete = 6368.1 * $c;
+        $valor = 6368.1 * $c;
         
+        $freteCliente =  valorFrete($valor);
+
+        
+        return($freteCliente);
+    }
+    
+    function valorFrete($frete){
         if($frete > 0 && $frete<5){
             $freteCliente = 2.00;
         }else if($frete>5 && $frete<10){
@@ -306,6 +324,27 @@
         
         return($freteCliente);
     }
+    
+        function calculaDistancia($lat2,$long2){
+        $lat1 = -20.457997;
+        $long1 = -54.587305;
+        $d2r = 0.017453292519943295769236;
 
+        $dlong = ($long2 - $long1) * $d2r;
+        $dlat = ($lat2 - $lat1) * $d2r;
+
+        $temp_sin = sin($dlat/2.0);
+        $temp_cos = cos($lat1 * $d2r);
+        $temp_sin2 = sin($dlong/2.0);
+
+        $a = ($temp_sin * $temp_sin) + ($temp_cos * $temp_cos) * ($temp_sin2 * $temp_sin2);
+        $c = 2.0 * atan2(sqrt($a), sqrt(1.0 - $a));
+
+        $distancia = 6368.1 * $c;
+        
+        $distancia = number_format($distancia, 3, '.', ',');
+        
+        return($distancia);
+    }
 
 ?>

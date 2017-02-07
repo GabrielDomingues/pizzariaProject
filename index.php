@@ -27,6 +27,7 @@
         </div>
       </div>
      </nav> 
+    
       <div class="container">
         <div class="row">
             <div class="col s12">
@@ -37,7 +38,7 @@
                       <th data-field="name">Nome</th>
                       <th data-field="email">Telefone</th>
                       <th data-field="endereço">Endereço</th>
-                      <th data-field="acoes" width="140">-</th>
+                      <th data-field="acoes" width="140">Opções</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -78,11 +79,6 @@
         
       <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar / Fechar</a>
     </div>
-  </div>
-  
-  <!--Modal Structure -->
-  <div id="">
-      
   </div>
     
      <!-- Modal Structure -->
@@ -125,32 +121,44 @@
       <div class="row">
     <form class="col s12" id="formFrete">
       <div class="row">
-          <div class="input-field col s4">
+          <div class="input-field col s3">
             <input  id="cpachar-telefonecliente" placeholder="" name="telefonecliente" type="text" class="validate" required>
-            <label for="cpachar-telefonecliente">Telefone</label>
+            <label for="cpachar-telefonecliente">Informe o Telefone</label>
           </div>
-          <div class="input-field col s4">
+          <div class="input-field col s3">
             <input id="cpachar-nomecliente" placeholder="" name="nomecliente" type="text" class="validate">
             <label for="cpachar-nomecliente">Nome</label>
           </div>
-          <div class="input-field col s4">
-            <input id="cpachar-fretecliente" placeholder="" name="enderecocliente" type="text" class="validate">
+          <div class="input-field col s3">
+            <input id="cpachar-fretecliente" placeholder="" name="fretecliente" type="text" class="validate">
             <label for="cpachar-fretecliente">Frete</label>
           </div>
+          <div class="input-field col s3">
+            <input id="cpachar-distanciacliente" placeholder="" name="distanciacliente" type="text" class="validate">
+            <label for="cpachar-distanciacliente">Distância(linha reta)</label>
+          </div>
+          <input id="cpachar-latitudecliente" name="latitudecliente" type="hidden">
+          <input id="cpachar-longitudecliente" name="longitudecliente" type="hidden">
+          <input id="cpachar-enderecocliente" name="enderecocliente" type="hidden">
         
       </div>
       
       
     </form>
-          <input id="cpachar-idcliente" name="idcliente" type="hidden" value="0" >
+    
   </div>
-    </div>
+    </div>     
+      
     <div class="modal-footer">
         
         <a href="#" class=" modal-action waves-effect waves-green btn-flat" id="btnCalcularFrete">Calcular Frete</a>
         
       <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar / Fechar</a>
     </div>
+           <div class="mapa right col s12" id="mapa" >
+        </div>
+      <script src="http://maps.googleapis.com/maps/api/js?key=YOUR-KEY&amp;sensor=false"></script>
+        
   </div>
 
   <!--  Scripts-->
@@ -158,6 +166,9 @@
   <script src="js/materialize.js"></script>
   <script src="js/cliente.js"></script>
   <script src="js/init.js"></script>
+  <script src="js/mapa.js"></script>
+  
+  
 
   </body>
 </html>

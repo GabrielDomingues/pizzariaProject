@@ -20,6 +20,7 @@ function cliente(){
                     class : "btn-floating right",
                     title : "Alterar Registro",
                     href : "#modalAlterar"
+                    
                 });
                 
                 var icone = $("<i />").attr("class", "mdi-content-create");
@@ -110,13 +111,17 @@ function cliente(){
         
         cliente_telefone = $("#cpachar-telefonecliente").val();
         $.ajax({
-            url : this.url +"?passo=acharCliente&telefonecliente=" + cliente_telefone
+            url : this.url +"?passo=procurarCliente&telefonecliente=" + cliente_telefone
         }).done(function(acharCliente){
             $.each(acharCliente, function(key, val){
                
-               $("#cpachar-telefonecliente").val(acharCliente.cliente_telefone);
-               $("#cpachar-nomecliente").val(acharCliente.cliente_nome);
-               $("#cpachar-fretecliente").val(acharCliente.cliente_endereco);
+               $("#cpachar-telefonecliente").val(acharCliente[0].cliente_telefone);
+               $("#cpachar-nomecliente").val(acharCliente[0].cliente_nome);
+               $("#cpachar-distanciacliente").val(acharCliente[0].cliente_distancia);
+               $("#cpachar-fretecliente").val(acharCliente[0].cliente_frete);
+               $("#cpachar-latitudecliente").val(acharCliente[0].cliente_latitude);
+               $("#cpachar-longitudecliente").val(acharCliente[0].cliente_longitude);
+               $("#cpachar-enderecocliente").val(acharCliente[0].cliente_endereco);
                 
 //                var tr = $("<tr />");
 //                tr.append($("<td />").text(val.cliente_id));
